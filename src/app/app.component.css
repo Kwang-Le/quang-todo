@@ -1,0 +1,15 @@
+
+#navigation {
+    width: 100%;
+    height: 100px;
+    padding: 0;
+    background-color: black;
+    box-sizing: border-box;
+}
+
+#navigation h2{
+    display: inline-block;
+    color: white;
+    line-height: 50px;
+    padding: 0 30px;
+}
