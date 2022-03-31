@@ -16,6 +16,8 @@ export class TodosComponent implements OnInit {
   pageSize:number = 5;
   lowValue:number = 0;
   highValue:number = 5; 
+  currentPage: number = 0;
+  countTodo: any;
 
  todos!: Todo[];
   inputToDo: string="";
@@ -31,7 +33,11 @@ export class TodosComponent implements OnInit {
 
 
   getAllTodos(): void {
-    this.todoService.getAllTodos().subscribe(data => this.todos = data);
+    this.todoService.getPaginationItems(this.pageIndex, this.pageSize).subscribe(data => this.todos = data);
+    this.todoService.getCountTodo().subscribe(data => {
+      this.countTodo = data[0].count;
+      console.log(data[0].count)
+    });
   }
 
   updateTodo(todo: Todo): void {
@@ -41,13 +47,12 @@ export class TodosComponent implements OnInit {
   Delete(todo: Todo){
     this.todoService.deleteTodo(todo.id).subscribe();
     this.todos = this.todos.filter((v,index) => v.id !== todo.id);
+    this.getAllTodos();
   }
 
   Add(){
-    //console.log(this.inputToDo);
     if(this.inputToDo.length > 0){
       this.todoService.AddTodo({ todo: this.inputToDo } as Todo).subscribe();
-      //this.todos.push({todo: this.inputToDo} as Todo);
       this.getAllTodos();
       this.inputToDo = "";
     }
@@ -66,16 +71,9 @@ export class TodosComponent implements OnInit {
     });
   }
 
-  getPaginatorData(event: any){
-    if(event.pageIndex === this.pageIndex + 1){
-       this.lowValue = this.lowValue + this.pageSize;
-       this.highValue =  this.highValue + this.pageSize;
-      }
-   else if(event.pageIndex === this.pageIndex - 1){
-      this.lowValue = this.lowValue - this.pageSize;
-      this.highValue =  this.highValue - this.pageSize;
-     }   
+  updatePageIndex(event: any){  
       this.pageIndex = event.pageIndex;
-}
+      this.getAllTodos();
+  }
 }
 

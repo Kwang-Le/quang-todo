@@ -10,14 +10,15 @@
         />
         <input type="submit" value="add todo" class="todo-submit"/>
     </form>
-    <div class="todo" *ngFor="let todo of todos.reverse() | slice: lowValue : highValue; let i = index ">
+    <div class="todo" *ngFor="let todo of todos; let i = index ">
         <div class="id">{{i+1}}</div>
         <div class="content"><input type="text" placeholder="..." [(ngModel)]="todo.todo" #search (keydown.enter)="updateTodo(todo);search.blur()" class="todo-update"/></div>
+        <button mat-button class="Complete">Complete</button>
         <button mat-button class="delete" (click)="openDialog(todo)">Remove</button>
     </div>
-    <mat-paginator [length]="todos.length"
+    <mat-paginator [length]="countTodo"
             [pageSize]="pageSize"
-            (page)="getPaginatorData($event)"
+            (page)="updatePageIndex($event)"
             aria-label="Select page">
     </mat-paginator>
 </div>

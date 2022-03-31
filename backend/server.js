@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 var bodyParser = require('body-parser');
+const querystring = require('querystring');
 const app = express();
 
 app.use(cors());
@@ -32,20 +33,28 @@ con.connect(function(err) {
     })
   });
   //GET ALL TODO
-  app.get('/', function (req, res) {
-    con.query('SELECT * FROM todos', function (error, results, fields) {
-        if (error) throw error;
-        return res.send(results);
-    });
-});
-  //GET TODO BY ID
-  app.get('/:id', (req, res) => {
-      let user_id = req.params.id;
-      con.query(`SELECT * FROM todos WHERE id=?`,user_id, (err, results) =>{
-          if(err) throw err;
-          res.send(results);
-      });
+//   app.get('/', function (req, res) {
+//         console.log('gettodo');
+//         con.query('SELECT * FROM todos', function (error, results, fields) {
+//             if (error) throw error;
+//             return res.send(results);
+//         });
+//     });
+  //GET COUNT OF TODO
+  app.get('/count', (req,res) =>{
+      con.query('SELECT COUNT(*) AS count FROM todos', (err, results) =>{
+          if (err) throw err;
+          return res.send(results);
+      })
   })
+  //GET TODO BY ID
+//   app.get('/:id', (req, res) => {
+//       let user_id = req.params.id;
+//       con.query(`SELECT * FROM todos WHERE id=?`,user_id, (err, results) =>{
+//           if(err) throw err;
+//           res.send(results);
+//       });
+//   })
   //ADD TODO
   app.post('/add-user', (req, res) => {
       console.log(req.body);
@@ -72,3 +81,17 @@ con.connect(function(err) {
           res.send(results);
       })
   })
+  //GET PAGINATION DATA
+  app.get("/pagination/:page/:limit", (req, res) =>{
+    console.log('getPagination');
+      const page = req.params.page;
+      const limit = req.params.limit;
+      console.log(page, limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      con.query(`SELECT * FROM todos ORDER BY id DESC LIMIT ?,? `, [startIndex, Number(limit)], (err, results) =>{
+          if(err) throw err;
+          res.send(results);
+      });
+  })
+

@@ -13,12 +13,14 @@ import { HttpClientModule } from "@angular/common/http";
 import { TodosComponent } from './todos/todos.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { CompletedTodoComponent } from './completed-todo/completed-todo.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TodosComponent,
     ConfirmDialogComponent,
+    CompletedTodoComponent,
   ],
   imports: [
     BrowserModule,

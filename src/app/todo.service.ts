@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Todo } from './Todo';
-import { HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,13 +27,15 @@ export class TodoService {
 
   constructor(private http: HttpClient) { }
 
+
+
   getAllTodos(): Observable<Todo[]> {
     return this.http.get<Todo[]>(this.apiUrl, this.httpOptions);
   }
 
   AddTodo(newTodo: Todo): Observable<Todo>{
     console.log(newTodo);
-    return this.http.post<Todo>(`${this.apiUrl}/add-user`, newTodo, this.httpOptions)
+    return this.http.post<Todo>(`${this.apiUrl}/add-user`, newTodo, this.httpOptions);
   }
 
   updateTodo(id: any, todo: string): Observable<Todo>{
@@ -43,6 +44,15 @@ export class TodoService {
 
   deleteTodo(id: any): Observable<Todo>{
     return this.http.delete<Todo>(`${this.apiUrl}/${id}`, this.httpOptions);
+  }
+
+  getPaginationItems(page: number, limit: number): Observable<Todo[]>{
+    console.log(page,limit);
+    return this.http.get<Todo[]>(`${this.apiUrl}/pagination/${page+1}/${limit}`, this.httpOptions);
+  }
+
+  getCountTodo(): Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}/count`, this.httpOptions);
   }
 
 }
